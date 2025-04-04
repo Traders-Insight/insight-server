@@ -1,0 +1,9 @@
+# This file specifies the code owners for the repository.
+
+# Define the owners for the entire repository
+
+-      @Patrick-Ehimen
+
+# Define the owners for specific directories
+
+/src/ @Patrick-Ehimen
