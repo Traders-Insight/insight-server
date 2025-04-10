@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { initializeDatabaseConnections } from "./config/database";
-import userRoutes from "./routes/user.routes";
+import { userRoutes, loginRoutes } from "./routes";
 
 dotenv.config();
 
@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Use user routes
 app.use("/api", userRoutes);
+app.use("/api", loginRoutes);
 
 // Connect to MongoDB when the server starts
 const startServer = async () => {

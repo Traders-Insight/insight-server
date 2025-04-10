@@ -1,10 +1,10 @@
-// src/routes/user.routes.ts
 import { Router } from "express";
-import { createUser } from "../controllers/user.controller";
-import { validateUser } from "../middleware/validate-user";
+import { createUser, loginUser } from "../controllers/user.controller";
+import { validateUser, validateLogin } from "../middleware/validate-user";
 
 const router = Router();
 
 router.post("/create-user", validateUser, createUser);
+router.post("/login", validateLogin, loginUser);
 
 export default router;
