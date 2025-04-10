@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { initializeDatabaseConnections } from "./config/database";
+import userRoutes from "./routes/user.routes";
 
 dotenv.config();
 
@@ -16,13 +17,8 @@ app.use(express.json());
 // 'extended: true' allows for rich objects and arrays to be encoded as URL-encoded data.
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, World!");
-});
-
-app.get("/health", (req: Request, res: Response) => {
-  res.send("OK!!!");
-});
+// Use user routes
+app.use("/api", userRoutes);
 
 // Connect to MongoDB when the server starts
 const startServer = async () => {
