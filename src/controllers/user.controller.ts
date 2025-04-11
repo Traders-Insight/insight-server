@@ -1,6 +1,15 @@
 import { Request, Response } from "express";
 import { User } from "../models/users";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const tokenSecret = process.env.JWT_SECRET;
+if (!tokenSecret) {
+  throw new Error("JWT_SECRET is not defined in environment variables");
+}
 
 export const createUser = async (
   req: Request,
@@ -25,6 +34,15 @@ export const createUser = async (
       username: req.body.username || null,
     });
     await newUser.save();
+    const token = jwt.sign({ id: newUser._id }, tokenSecret, {
+      expiresIn: "6h",
+    });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 21600000, // 6 hour
+    });
     res
       .status(201)
       .json({ message: "User created successfully", user: newUser });
@@ -44,6 +62,19 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET is not defined in environment variables");
+    }
+    const token = jwt.sign({ id: user._id }, tokenSecret, {
+      expiresIn: "6h",
+    });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 21600000, // 6 hour
+    });
+
     // Verify the password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -54,6 +85,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     // Successful login
     res.status(200).json({
       message: "Login successful",
+      token,
       user: { uniqueId: user.uniqueId, email: user.email },
     });
   } catch (error) {
