@@ -29,3 +29,20 @@ export const validateLogin = (
 
   next();
 };
+
+export const validateChangePassword = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    res
+      .status(400)
+      .json({ message: "Old password and new password are required" });
+    return;
+  }
+
+  next();
+};
