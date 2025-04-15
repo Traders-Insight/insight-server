@@ -89,6 +89,7 @@ const userSchema = new Schema<IUser>({
       },
     ],
   },
+  verificationCode: { type: String },
 });
 
 // Add timestamps middleware

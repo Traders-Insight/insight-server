@@ -41,4 +41,5 @@ export interface IUser {
   roles: string[];
   profile: UserProfile;
   security: UserSecurity;
+  verificationCode?: string;
 }
