@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { initializeDatabaseConnections } from "./config/database";
-import { userRoutes, loginRoutes } from "./routes";
+import { userRoutes, loginRoutes, forgotPasswordRoute } from "./routes";
 
 dotenv.config();
 
@@ -20,6 +20,12 @@ app.use(express.urlencoded({ extended: true }));
 // Use user routes
 app.use("/api", userRoutes);
 app.use("/api", loginRoutes);
+app.use("/api", forgotPasswordRoute);
+
+// Middleware to handle 404 errors
+app.use((req, res, next) => {
+  res.status(404).json({ message: "Route not found" });
+});
 
 // Connect to MongoDB when the server starts
 const startServer = async () => {
